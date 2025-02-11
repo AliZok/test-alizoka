@@ -7,6 +7,9 @@
           قبلی
         </div>
         <div>
+          {{ shamsiMonths[indexMonthOfYearPrev].name }}
+        </div>
+        <div>
           {{ shamsiMonths[indexMonthOfYear].name }}
         </div>
         <div @click="goNextMonth()">بعدی</div>
@@ -22,7 +25,6 @@
           <span v-for="day in daysssOfWeek" :key="day">{{ day }}</span>
         </div>
         <div class="days-grid">
-
           <!-- empty characters -->
           <span v-for="day in emptyDays" :key="day">
           </span>
@@ -53,11 +55,11 @@
         <div class="days-grid">
 
           <!-- empty characters -->
-          <span v-for="day in emptyDays" :key="day">
+          <span v-for="day in emptyDaysPrev" :key="day">
           </span>
 
           <!-- start days characters -->
-          <span v-for="day in mainListDaysInMonth" :key="day" class="text-center relative day"
+          <span v-for="day in mainListDaysInMonthPrev" :key="day" class="text-center relative day"
             :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9]': !day.reserved, 'bg-lime-300': day.isToday }]">
             <div>{{ day.day }}</div>
 
@@ -129,30 +131,41 @@ const shamsiMonths = ref([
 ]);
 
 const emptyDays = ref(0)
+const emptyDaysPrev = ref(0)
 const indexMonthOfYear = ref(0)
+const indexMonthOfYearPrev = ref(0)
 const mainListDaysInMonth = ref([])
+const mainListDaysInMonthPrev = ref([])
 // GET TODAY 
 const toDay = ref({})
 const newDate = new Date();
-const showingDate = new Date(newDate);
-const showingDateJalali = ref({});
+const showingMasterDate = new Date(newDate);
+const showingMasterDatePrev = new Date(newDate);
+const showingMasterDateJalali = ref({});
+const showingMasterDateJalaliPrev = ref({});
 
 toDay.value = toJalaali(newDate)
 
-const createShowingDate = (numberOfNextMonth) => {
+const createshowingMasterDate = (numberOfNextMonth) => {
 
 
-  showingDate.setMonth(showingDate.getMonth() + numberOfNextMonth);
-  showingDateJalali.value = toJalaali(showingDate)
+  showingMasterDate.setMonth(showingMasterDate.getMonth() + numberOfNextMonth);
+  showingMasterDatePrev.setMonth(showingMasterDatePrev.getMonth() + numberOfNextMonth - 1);
 
-  const dateObject = jalaaliToDateObject(showingDateJalali.value.jy, showingDateJalali.value.jm, 1);
+  showingMasterDateJalali.value = toJalaali(showingMasterDate)
+  showingMasterDateJalaliPrev.value = toJalaali(showingMasterDatePrev)
+
+  const dateObject = jalaaliToDateObject(showingMasterDateJalali.value.jy, showingMasterDateJalali.value.jm, 1);
+  const dateObjectPrev = jalaaliToDateObject(showingMasterDateJalaliPrev.value.jy, showingMasterDateJalaliPrev.value.jm, 1);
 
   emptyDays.value = convertToShamsiDayNumber(dateObject.getDay());
-  indexMonthOfYear.value = getShamsiMonthNumber(showingDate);
+  emptyDaysPrev.value = convertToShamsiDayNumber(dateObjectPrev.getDay());
+
+  indexMonthOfYear.value = getShamsiMonthNumber(showingMasterDate);
+  indexMonthOfYearPrev.value = indexMonthOfYear.value - 1
 
   // if is leap year, Esfand have to be 30 days 
   shamsiMonths.value[11].days = isLeapShowingYear.value ? 30 : 29
-
 
   calculateDays()
 }
@@ -167,15 +180,26 @@ function convertToShamsiDayNumber(gregorianDay) {
 
 const calculateDays = () => {
   const propertyDaysEnt = Object.entries(propertyDays.value)
-  const showingMonthEn = shamsiMonths.value[showingDateJalali.value.jm - 1].enName
-  const showingMonthDays = shamsiMonths.value[showingDateJalali.value.jm - 1].days
+
+  const showingMonthEn = shamsiMonths.value[showingMasterDateJalali.value.jm - 1].enName
+  const showingMonthEnPrev = shamsiMonths.value[showingMasterDateJalaliPrev.value.jm - 1].enName
+
+  const showingMonthDays = shamsiMonths.value[showingMasterDateJalali.value.jm - 1].days
+  const showingMonthDaysPrev = shamsiMonths.value[showingMasterDateJalaliPrev.value.jm - 1].days
+
   let parseProperties = []
+  let parsePropertiesPrev = []
 
 
   propertyDaysEnt.forEach((itemMonth) => {
     if (showingMonthEn == itemMonth[0]) {
       parseProperties = Object.entries(itemMonth[1])
       console.log("hhhhhhhhhhhhhhhhhhhh", parseProperties)
+    }
+
+    if (showingMonthEnPrev == itemMonth[0]) {
+      parsePropertiesPrev = Object.entries(itemMonth[1])
+
     }
   })
 
@@ -188,19 +212,36 @@ const calculateDays = () => {
         oneDayList = { ...oneDayList, ...itemProperty[1] }
       }
     })
+
     mainListDaysInMonth.value.push(oneDayList)
   }
 
-  if (showingDateJalali.value.jm == toDay.value.jm && showingDateJalali.value.jy == toDay.value.jy) {
+
+  mainListDaysInMonthPrev.value = []
+  for (let counter = 1; counter <= showingMonthDaysPrev; counter++) {
+    let oneDayList = { day: counter }
+
+    parsePropertiesPrev.forEach((itemProperty) => {
+      if (itemProperty[0] == counter) {
+        oneDayList = { ...oneDayList, ...itemProperty[1] }
+      }
+    })
+
+    mainListDaysInMonthPrev.value.push(oneDayList)
+  }
+
+
+
+  if (showingMasterDateJalali.value.jm == toDay.value.jm && showingMasterDateJalali.value.jy == toDay.value.jy) {
     mainListDaysInMonth.value[toDay.value.jd - 1].isToday = true
   }
 
+  if (showingMasterDateJalaliPrev.value.jm == toDay.value.jm && showingMasterDateJalaliPrev.value.jy == toDay.value.jy) {
+    mainListDaysInMonthPrev.value[toDay.value.jd - 1].isToday = true
+  }
+
+
   console.log("ffffffffffffface", mainListDaysInMonth.value)
-
-
-
-
-
 
 };
 
@@ -221,23 +262,20 @@ function getShamsiMonthNumber(gregorianDate) {
 //========================= global functions
 
 const goNextMonth = () => {
-  createShowingDate(1)
+  createshowingMasterDate(1)
 }
 
 const goPrevMonth = () => {
-  createShowingDate(-1)
+  createshowingMasterDate(-1)
 }
 
-const isLeapShowingYear = computed(() => isLeapJalaaliYear(showingDateJalali.value?.jy))
+const isLeapShowingYear = computed(() => isLeapJalaaliYear(showingMasterDateJalali.value?.jy))
 // =================================
 
 
 onMounted(() => {
-  createShowingDate(0)
+  createshowingMasterDate(0)
 
-
-
-  console.log("qqqqqqqqqqqqqqqqqqq", isLeapShowingYear.value)
 })
 </script>
 
