@@ -1,5 +1,7 @@
 <template>
     <div class="Home">
-        <Calendar />
+        <div class="max-w-[1200px] mx-auto">
+            <Calendar />
+        </div>
     </div>
 </template>
