@@ -26,7 +26,7 @@
 
       <!-- start days characters -->
       <span v-for="day in mainListDaysInMonth" :key="day" class="text-center relative day"
-        :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9]': !day.reserved }]">
+        :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9]': !day.reserved, 'bg-lime-300':day.isToday }]">
         <div>{{ day.day }}</div>
 
         <div class="flex justify-center items-center text-[10px] gap-1 text-white" dir="ltr">
@@ -80,6 +80,7 @@ const showingDateJalali = ref({});
 
 const createShowingDate = (numberOfNextMonth) => {
 
+  toDay.value = toJalaali(newDate)
   showingDate.setMonth(showingDate.getMonth() + numberOfNextMonth);
   showingDateJalali.value = toJalaali(showingDate)
 
@@ -95,10 +96,6 @@ const createShowingDate = (numberOfNextMonth) => {
   calculateDays()
 }
 
-
-toDay.value = toJalaali(newDate)
-
-console.log(toDay.value.jd, toDay.value.jm, "toooooooday")
 
 function convertToShamsiDayNumber(gregorianDay) {
   return (gregorianDay + 1) % 7;
@@ -146,6 +143,7 @@ const calculateDays = () => {
   const showingMonthDays = shamsiMonths.value[showingDateJalali.value.jm - 1].days
   let parseProperties = []
 
+
   propertyDaysEnt.forEach((itemMonth) => {
     if (showingMonthEn == itemMonth[0]) {
       parseProperties = Object.entries(itemMonth[1])
@@ -163,6 +161,10 @@ const calculateDays = () => {
       }
     })
     mainListDaysInMonth.value.push(oneDayList)
+  }
+
+  if (showingDateJalali.value.jm == toDay.value.jm && showingDateJalali.value.jy == toDay.value.jy) {
+    mainListDaysInMonth.value[toDay.value.jd - 1].isToday = true
   }
 
   console.log("ffffffffffffface", mainListDaysInMonth.value)
