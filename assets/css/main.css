@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+
+@font-face {
+    font-family: farsi;
+    src: url('/assets/fonts/yekanbakh/YekanBakhFaNum-Light.woff2');
+}
+
+.farsi-font {
+    font-family: farsi;
+}
