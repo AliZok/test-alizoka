@@ -1,6 +1,6 @@
 <template>
     <div class="Home farsi-font">
-        <div class="mx-auto max-w-[1200px]">
+        <div class="flex justify-center items-center mx-auto pb-[100px] max-w-[1200px] h-[100vh]">
         
             <Calendar />
         </div>

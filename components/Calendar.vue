@@ -1,24 +1,26 @@
 <template>
   <div dir="rtl">
     <!-- Days of the Week -->
-    <div class="mb-8 text-center">
+    <div class="mb-4 text-center">
       <div class="flex justify-between" dir="ltr">
         <div @click="goPrevMonth()">
-          قبلی
+          {{ shamsiMonths[indexMonthOfYear - 2]?.name }}
         </div>
-        <div>
-          {{ shamsiMonths[indexMonthOfYearPrev].name }}
+        <div @click="goNextMonth()">
+          <div>
+            {{ shamsiMonths[indexMonthOfYear + 1]?.name }}
+          </div>
+          <i class='fa-angle-right fa'></i>
         </div>
-        <div>
-          {{ shamsiMonths[indexMonthOfYear].name }}
-        </div>
-        <div @click="goNextMonth()">بعدی</div>
       </div>
     </div>
 
     <!-- Days of the Month -->
     <div class="flex justify-center gap-6">
       <div>
+        <div class="mb-4 text-center">
+          {{ shamsiMonths[indexMonthOfYear].name }}
+        </div>
         <div class="text-center days-of-week">
           <span v-for="day in daysssOfWeek" :key="day">{{ day }}</span>
         </div>
@@ -26,10 +28,9 @@
           <!-- empty characters -->
           <span v-for="day in emptyDays" :key="day">
           </span>
-
           <!-- start days characters -->
           <span v-for="day in mainListDaysInMonth" :key="day"
-            class="relative flex flex-col justify-between px-1 py-1 rounded-lg text-center day"
+            class="relative flex flex-col justify-between px-1 py-1 rounded-lg w-[50px] h-[50px] text-center day"
             :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9] cursor-pointer': !day.reserved, 'bg-lime-300': day.isToday }]">
             <div>{{ day.day }}</div>
 
@@ -53,22 +54,22 @@
             <div v-if="day.lastMomentDiscount" class="top-1 right-0 absolute px-1 rounded-full"> <i
                 class="text-amber-400 fa fa-bolt"></i></div>
           </span>
-
         </div>
       </div>
-
       <div>
+        <div class="mb-4 text-center">
+          {{ shamsiMonths[indexMonthOfYearPrev].name }}
+        </div>
         <div class="text-center days-of-week">
           <span v-for="day in daysssOfWeek" :key="day">{{ day }}</span>
         </div>
         <div class="days-grid">
-
           <!-- empty characters -->
           <span v-for="day in emptyDaysPrev" :key="day">
           </span>
-
           <!-- start days characters -->
-          <span v-for="day in mainListDaysInMonthPrev" :key="day" class="relative px-1 py-1 rounded-lg text-center day"
+          <span v-for="day in mainListDaysInMonthPrev" :key="day"
+            class="relative px-1 py-1 rounded-lg w-[50px] h-[50px] text-center day"
             :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9] cursor-pointer': !day.reserved, 'bg-lime-300': day.isToday }]">
             <div>{{ day.day }}</div>
 
@@ -83,12 +84,9 @@
             <div v-if="day.lastMomentDiscount" class="top-1 right-0 absolute px-1 rounded-full"> <i
                 class="text-amber-400 fa fa-bolt"></i></div>
           </span>
-
         </div>
       </div>
-
     </div>
-
   </div>
 </template>
 
