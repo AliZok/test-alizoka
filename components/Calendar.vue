@@ -1,13 +1,18 @@
 <template>
-  <div dir="rtl">
+  <div class="bg-[#e6fff7] px-3 rounded-2xl" dir="rtl" >
     <!-- Days of the Week -->
     <div class="mb-4 text-center">
       <div class="flex justify-between" dir="ltr">
         <div @click="goPrevMonth()">
-          {{ shamsiMonths[indexMonthOfYear - 2]?.name }}
+          <div class="flex items-center gap-2 my-delay w-[40px] h-[30px] text-[10px] hover:text-emerald-500 hover:text-[12px] cursor-pointer">
+            <i class='fa-angle-left fa'></i>
+            <div class="pt-1">
+              {{ shamsiMonths[indexMonthOfYear - 2]?.name }}
+            </div>
+          </div>
         </div>
-        <div @click="goNextMonth()">
-          <div>
+        <div @click="goNextMonth()" class="flex items-center gap-2 my-delay w-[40px] h-[30px] text-[10px] hover:text-emerald-500 hover:text-[12px] cursor-pointer">
+          <div class="pt-1">
             {{ shamsiMonths[indexMonthOfYear + 1]?.name }}
           </div>
           <i class='fa-angle-right fa'></i>
@@ -16,9 +21,9 @@
     </div>
 
     <!-- Days of the Month -->
-    <div class="flex justify-center gap-6">
-      <div>
-        <div class="mb-4 text-center">
+    <div class="block md:flex justify-center gap-6 text-gray-700">
+      <div class="mb-8">
+        <div class="mb-4 font-bold text-lime-500 text-center">
           {{ shamsiMonths[indexMonthOfYear].name }}
         </div>
         <div class="text-center days-of-week">
@@ -26,12 +31,12 @@
         </div>
         <div class="days-grid">
           <!-- empty characters -->
-          <span v-for="day in emptyDays" :key="day">
+          <span v-for="empty in emptyDays" :key="empty">
           </span>
           <!-- start days characters -->
           <span v-for="day in mainListDaysInMonth" :key="day"
-            class="relative flex flex-col justify-between px-1 py-1 rounded-lg w-[50px] h-[50px] text-center day"
-            :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9] cursor-pointer': !day.reserved, 'bg-lime-300': day.isToday }]">
+            class="relative flex flex-col justify-between px-1 py-1 rounded-lg w-[45px] md:w-[48px] min-h-[50px] text-center day"
+            :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9] hover:scale-[1.09] cursor-pointer bg-white': !day.reserved, '!bg-lime-300 font-bold': day.isToday }]">
             <div>{{ day.day }}</div>
 
             <!-- <div class="text-[10px] text-white" dir="ltr">
@@ -57,7 +62,7 @@
         </div>
       </div>
       <div>
-        <div class="mb-4 text-center">
+        <div class="mb-4 font-bold text-lime-500 text-center">
           {{ shamsiMonths[indexMonthOfYearPrev].name }}
         </div>
         <div class="text-center days-of-week">
@@ -65,12 +70,12 @@
         </div>
         <div class="days-grid">
           <!-- empty characters -->
-          <span v-for="day in emptyDaysPrev" :key="day">
+          <span v-for="empty in emptyDaysPrev" :key="empty">
           </span>
           <!-- start days characters -->
           <span v-for="day in mainListDaysInMonthPrev" :key="day"
-            class="relative px-1 py-1 rounded-lg w-[50px] h-[50px] text-center day"
-            :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9] cursor-pointer': !day.reserved, 'bg-lime-300': day.isToday }]">
+            class="relative px-1 py-1 rounded-lg w-[45px] md:w-[48px] min-h-[50px] text-center day"
+            :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9] cursor-pointer hover:scale-[1.09]  bg-white': !day.reserved, '!bg-lime-300': day.isToday }]">
             <div>{{ day.day }}</div>
 
             <div class="flex justify-center items-center gap-1 text-[10px] text-white" dir="ltr">
@@ -305,10 +310,11 @@ onMounted(() => {
 .days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
+  gap: 3px;
 }
 
 .day {
   box-shadow: 2px 2px 5px #d7dad9;
+  transition: 0.3s;
 }
 </style>
