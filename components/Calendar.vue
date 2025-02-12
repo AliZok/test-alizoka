@@ -15,7 +15,8 @@
         <div @click="goNextMonth()"
           class="flex items-center gap-2 my-delay w-[40px] h-[30px] text-[10px] hover:text-emerald-500 hover:text-[12px] cursor-pointer">
 
-          <div class="pt-1">
+          <div class="pt-1">=={{ indexMonthOfYear }}==
+            {{ indexOfNextMonth }}
             {{ shamsiMonths[indexOfNextMonth]?.name }}
           </div>
           <i class='fa-angle-right fa'></i>
@@ -27,7 +28,7 @@
     <div class="block md:flex justify-center gap-6 text-gray-700">
       <div class="mb-8">
         <div class="mb-4 font-bold text-lime-500 text-center">
-          {{ shamsiMonths[indexMonthOfYear]?.name }}
+          {{ shamsiMonths[indexOfShowMonth]?.name }}
         </div>
         <div class="text-center days-of-week" dir="ltr">
           <span v-for="day in daysssOfWeek" :key="day">{{ day }}</span>
@@ -71,7 +72,7 @@
       </div>
       <div>
         <div class="mb-4 font-bold text-lime-500 text-center">
-          {{ shamsiMonths[indexMonthOfYearPrev].name }}
+          {{ shamsiMonths[indexOfShowMonthPrev].name }}
         </div>
         <div class="text-center days-of-week" dir="ltr">
           <span v-for="day in daysssOfWeek" :key="day">{{ day }}</span>
@@ -260,6 +261,7 @@ const goPrevMonth = () => {
 }
 
 const isLeapShowingYear = computed(() => isLeapJalaaliYear(showingMasterDateJalali.value?.jy))
+
 const indexOfNextMonth = computed(() => {
   if ((indexMonthOfYear.value + 1) < 12) {
     return (indexMonthOfYear.value + 1)
@@ -271,6 +273,22 @@ const indexOfNextMonth = computed(() => {
 const indexOfPrevMonth = computed(() => {
   if ((indexMonthOfYear.value - 2) > -1) {
     return (indexMonthOfYear.value - 2)
+  } else {
+    return 11
+  }
+})
+
+const indexOfShowMonth = computed(() => {
+  if ((indexMonthOfYear.value) < 12) {
+    return indexMonthOfYear.value
+  } else {
+    return 0
+  }
+})
+
+const indexOfShowMonthPrev = computed(() => {
+  if ((indexMonthOfYearPrev.value) > -1) {
+    return indexMonthOfYearPrev.value
   } else {
     return 11
   }
