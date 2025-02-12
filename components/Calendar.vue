@@ -17,7 +17,7 @@
     </div>
 
     <!-- Days of the Month -->
-    <div class="flex gap-4">
+    <div class="flex justify-center gap-6">
       <div>
         <div class="text-center days-of-week">
           <span v-for="day in daysssOfWeek" :key="day">{{ day }}</span>
@@ -28,19 +28,30 @@
           </span>
 
           <!-- start days characters -->
-          <span v-for="day in mainListDaysInMonth" :key="day" class="relative text-center day"
-            :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9]': !day.reserved, 'bg-lime-300': day.isToday }]">
+          <span v-for="day in mainListDaysInMonth" :key="day"
+            class="relative flex flex-col justify-between px-1 py-1 rounded-lg text-center day"
+            :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9] cursor-pointer': !day.reserved, 'bg-lime-300': day.isToday }]">
             <div>{{ day.day }}</div>
 
+            <!-- <div class="text-[10px] text-white" dir="ltr">
+              <div v-if="day.discount" class="bg-rose-500 mb-1 px-2 py-[2px] rounded-2xl text-[9px]">
+                {{ day.discount }} %
+              </div>
+              <div v-if="day.instantDiscount" class="bg-pink-400 px-2 py-[2px] rounded-2xl text-[9px]">{{
+                day.instantDiscount }} %
+              </div>
+            </div> -->
             <div class="flex justify-center items-center gap-1 text-[10px] text-white" dir="ltr">
-              <div v-if="day.discount" class="bg-rose-500 px-2 py-[2px] rounded-2xl">
+              <div v-if="day.discount" class="bg-rose-500 px-[4px] pt-[2px] rounded-xl">
                 {{ day.discount }}
                 %
               </div>
-              <div v-if="day.instantDiscount" class="bg-pink-400 px-2 py-[2px] rounded-2xl">{{ day.instantDiscount }} %
+              <div v-if="day.instantDiscount" class="bg-pink-400 px-[4px] pt-[2px] rounded-xl">{{ day.instantDiscount }}
+                %
               </div>
             </div>
-            <div v-if="day.lastMomentDiscount" class="top-1 right-1 absolute bg-green-300 px-1 rounded-full">a</div>
+            <div v-if="day.lastMomentDiscount" class="top-1 right-0 absolute px-1 rounded-full"> <i
+                class="text-amber-400 fa fa-bolt"></i></div>
           </span>
 
         </div>
@@ -57,8 +68,8 @@
           </span>
 
           <!-- start days characters -->
-          <span v-for="day in mainListDaysInMonthPrev" :key="day" class="relative text-center day"
-            :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9]': !day.reserved, 'bg-lime-300': day.isToday }]">
+          <span v-for="day in mainListDaysInMonthPrev" :key="day" class="relative px-1 py-1 rounded-lg text-center day"
+            :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9] cursor-pointer': !day.reserved, 'bg-lime-300': day.isToday }]">
             <div>{{ day.day }}</div>
 
             <div class="flex justify-center items-center gap-1 text-[10px] text-white" dir="ltr">
@@ -69,7 +80,8 @@
               <div v-if="day.instantDiscount" class="bg-pink-400 px-2 py-[2px] rounded-2xl">{{ day.instantDiscount }} %
               </div>
             </div>
-            <div v-if="day.lastMomentDiscount" class="top-1 right-1 absolute bg-green-300 px-1 rounded-full">a</div>
+            <div v-if="day.lastMomentDiscount" class="top-1 right-0 absolute px-1 rounded-full"> <i
+                class="text-amber-400 fa fa-bolt"></i></div>
           </span>
 
         </div>
@@ -82,34 +94,46 @@
 
 <script setup>
 import { toJalaali, jalaaliToDateObject, isLeapJalaaliYear, jalaaliMonthLength } from 'jalaali-js';
+
 const propertyDays = ref({
   bahman: {
     1: {
       reserved: true,
-      discount: 25,
       lastMomentDiscount: 10,
-
     },
     2: {
       reserved: false,
       discount: 25,
-      instantDiscount: 30,
     },
     8: {
-      discount: 25,
       lastMomentDiscount: 10,
+      instantDiscount: 30,
+      lastMomentDiscount: 10,
+
+    },
+    11: {
+      reserved: true,
+    },
+    12: {
+      reserved: true,
+    },
+    13: {
+      reserved: true,
     },
   },
   dey: {
     4: {
       reserved: true,
       discount: 8,
-      lastMomentDiscount: 10,
-      instantDiscount: 30,
+    },
+    5: {
+      lastMomentDiscount: true,
+    },
+    6: {
+      lastMomentDiscount: true,
     },
   },
 })
-
 
 const daysssOfWeek = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج',];
 
@@ -284,12 +308,6 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 5px;
-}
-
-.days-grid span {
-  padding: 10px;
-  cursor: pointer;
-  border-radius: 5px;
 }
 
 .day {
