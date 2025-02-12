@@ -8,14 +8,15 @@
             class="flex items-center gap-2 my-delay w-[40px] h-[30px] text-[10px] hover:text-emerald-500 hover:text-[12px] cursor-pointer">
             <i class='fa-angle-left fa'></i>
             <div class="pt-1">
-              {{ shamsiMonths[indexMonthOfYear - 2]?.name }}
+              {{ shamsiMonths[indexOfPrevMonth]?.name }}
             </div>
           </div>
         </div>
         <div @click="goNextMonth()"
           class="flex items-center gap-2 my-delay w-[40px] h-[30px] text-[10px] hover:text-emerald-500 hover:text-[12px] cursor-pointer">
+
           <div class="pt-1">
-            {{ shamsiMonths[indexMonthOfYear + 1]?.name }}
+            {{ shamsiMonths[indexOfNextMonth]?.name }}
           </div>
           <i class='fa-angle-right fa'></i>
         </div>
@@ -26,12 +27,12 @@
     <div class="block md:flex justify-center gap-6 text-gray-700">
       <div class="mb-8">
         <div class="mb-4 font-bold text-lime-500 text-center">
-          {{ shamsiMonths[indexMonthOfYear].name }}
+          {{ shamsiMonths[indexMonthOfYear]?.name }}
         </div>
         <div class="text-center days-of-week" dir="ltr">
           <span v-for="day in daysssOfWeek" :key="day">{{ day }}</span>
         </div>
-        <div class="days-grid"  dir="ltr">
+        <div class="days-grid" dir="ltr">
           <!-- empty characters -->
           <span v-for="empty in emptyDays" :key="empty">
           </span>
@@ -111,7 +112,7 @@ import { toJalaali, jalaaliToDateObject, isLeapJalaaliYear, jalaaliMonthLength }
 import myStore from '~/store/myStore.js'
 
 // import the list of days properties
-const propertyDaysParse = Object.entries(myStore.propertyDays)
+let propertyDaysParse = Object.entries(myStore.propertyDays)
 
 const daysssOfWeek = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
 
@@ -187,20 +188,23 @@ const calculateDays = () => {
 
   let parseProperties = []
   let parsePropertiesPrev = []
-
-  propertyDaysParse.forEach((itemMonth) => {
-
-    if (showingMonthEn == itemMonth[0]) {
-      parseProperties = Object.entries(itemMonth[1])
-    }
-
-    if (showingMonthEnPrev == itemMonth[0]) {
-      parsePropertiesPrev = Object.entries(itemMonth[1])
-    }
-  })
-
   mainListDaysInMonth.value = []
   mainListDaysInMonthPrev.value = []
+
+  if (showingMasterDateJalali.value.jy == 1403) {
+    propertyDaysParse.forEach((itemMonth) => {
+
+      if (showingMonthEn == itemMonth[0]) {
+        parseProperties = Object.entries(itemMonth[1])
+      }
+
+      if (showingMonthEnPrev == itemMonth[0]) {
+        parsePropertiesPrev = Object.entries(itemMonth[1])
+      }
+    })
+  }
+
+
 
   for (let counter = 1; counter <= showingMonthDays; counter++) {
     let oneDayList = { day: counter }
@@ -256,6 +260,21 @@ const goPrevMonth = () => {
 }
 
 const isLeapShowingYear = computed(() => isLeapJalaaliYear(showingMasterDateJalali.value?.jy))
+const indexOfNextMonth = computed(() => {
+  if ((indexMonthOfYear.value + 1) < 12) {
+    return (indexMonthOfYear.value + 1)
+  } else {
+    return 0
+  }
+})
+
+const indexOfPrevMonth = computed(() => {
+  if ((indexMonthOfYear.value - 2) > -1) {
+    return (indexMonthOfYear.value - 2)
+  } else {
+    return 11
+  }
+})
 
 onMounted(() => {
   createshowingDate(0)
