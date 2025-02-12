@@ -1,7 +1,7 @@
 <template>
   <div dir="rtl">
     <!-- Days of the Week -->
-    <div class="text-center mb-8">
+    <div class="mb-8 text-center">
       <div class="flex justify-between" dir="ltr">
         <div @click="goPrevMonth()">
           قبلی
@@ -16,12 +16,10 @@
       </div>
     </div>
 
-
-
     <!-- Days of the Month -->
     <div class="flex gap-4">
       <div>
-        <div class="days-of-week text-center">
+        <div class="text-center days-of-week">
           <span v-for="day in daysssOfWeek" :key="day">{{ day }}</span>
         </div>
         <div class="days-grid">
@@ -30,26 +28,26 @@
           </span>
 
           <!-- start days characters -->
-          <span v-for="day in mainListDaysInMonth" :key="day" class="text-center relative day"
+          <span v-for="day in mainListDaysInMonth" :key="day" class="relative text-center day"
             :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9]': !day.reserved, 'bg-lime-300': day.isToday }]">
             <div>{{ day.day }}</div>
 
-            <div class="flex justify-center items-center text-[10px] gap-1 text-white" dir="ltr">
-              <div v-if="day.discount" class="px-2 py-[2px] bg-rose-500 rounded-2xl ">
+            <div class="flex justify-center items-center gap-1 text-[10px] text-white" dir="ltr">
+              <div v-if="day.discount" class="bg-rose-500 px-2 py-[2px] rounded-2xl">
                 {{ day.discount }}
                 %
               </div>
-              <div v-if="day.instantDiscount" class="px-2 py-[2px] bg-pink-400 rounded-2xl">{{ day.instantDiscount }} %
+              <div v-if="day.instantDiscount" class="bg-pink-400 px-2 py-[2px] rounded-2xl">{{ day.instantDiscount }} %
               </div>
             </div>
-            <div v-if="day.lastMomentDiscount" class="absolute px-1 right-1 top-1 bg-green-300 rounded-full">a</div>
+            <div v-if="day.lastMomentDiscount" class="top-1 right-1 absolute bg-green-300 px-1 rounded-full">a</div>
           </span>
 
         </div>
       </div>
 
       <div>
-        <div class="days-of-week text-center">
+        <div class="text-center days-of-week">
           <span v-for="day in daysssOfWeek" :key="day">{{ day }}</span>
         </div>
         <div class="days-grid">
@@ -59,19 +57,19 @@
           </span>
 
           <!-- start days characters -->
-          <span v-for="day in mainListDaysInMonthPrev" :key="day" class="text-center relative day"
+          <span v-for="day in mainListDaysInMonthPrev" :key="day" class="relative text-center day"
             :class="[{ 'opacity-50 bg-gray-400': day.reserved, 'hover:bg-[#b3f9e9]': !day.reserved, 'bg-lime-300': day.isToday }]">
             <div>{{ day.day }}</div>
 
-            <div class="flex justify-center items-center text-[10px] gap-1 text-white" dir="ltr">
-              <div v-if="day.discount" class="px-2 py-[2px] bg-rose-500 rounded-2xl ">
+            <div class="flex justify-center items-center gap-1 text-[10px] text-white" dir="ltr">
+              <div v-if="day.discount" class="bg-rose-500 px-2 py-[2px] rounded-2xl">
                 {{ day.discount }}
                 %
               </div>
-              <div v-if="day.instantDiscount" class="px-2 py-[2px] bg-pink-400 rounded-2xl">{{ day.instantDiscount }} %
+              <div v-if="day.instantDiscount" class="bg-pink-400 px-2 py-[2px] rounded-2xl">{{ day.instantDiscount }} %
               </div>
             </div>
-            <div v-if="day.lastMomentDiscount" class="absolute px-1 right-1 top-1 bg-green-300 rounded-full">a</div>
+            <div v-if="day.lastMomentDiscount" class="top-1 right-1 absolute bg-green-300 px-1 rounded-full">a</div>
           </span>
 
         </div>
@@ -139,18 +137,21 @@ const mainListDaysInMonthPrev = ref([])
 // GET TODAY 
 const toDay = ref({})
 const newDate = new Date();
-const showingMasterDate = new Date(newDate);
-const showingMasterDatePrev = new Date(newDate);
+
 const showingMasterDateJalali = ref({});
 const showingMasterDateJalaliPrev = ref({});
+const monthNumberBefore = ref(0)
 
 toDay.value = toJalaali(newDate)
 
-const createshowingMasterDate = (numberOfNextMonth) => {
+const createshowingDate = (numberOfNextMonth) => {
+  const showingMasterDate = new Date(newDate);
+  const showingMasterDatePrev = new Date(newDate);
 
+  monthNumberBefore.value = monthNumberBefore.value + numberOfNextMonth
 
-  showingMasterDate.setMonth(showingMasterDate.getMonth() + numberOfNextMonth);
-  showingMasterDatePrev.setMonth(showingMasterDatePrev.getMonth() + numberOfNextMonth - 1);
+  showingMasterDate.setMonth(showingMasterDate.getMonth() + monthNumberBefore.value);
+  showingMasterDatePrev.setMonth(showingMasterDatePrev.getMonth() + monthNumberBefore.value - 1);
 
   showingMasterDateJalali.value = toJalaali(showingMasterDate)
   showingMasterDateJalaliPrev.value = toJalaali(showingMasterDatePrev)
@@ -187,19 +188,21 @@ const calculateDays = () => {
   const showingMonthDays = shamsiMonths.value[showingMasterDateJalali.value.jm - 1].days
   const showingMonthDaysPrev = shamsiMonths.value[showingMasterDateJalaliPrev.value.jm - 1].days
 
+
+
+
   let parseProperties = []
   let parsePropertiesPrev = []
 
 
   propertyDaysEnt.forEach((itemMonth) => {
+
     if (showingMonthEn == itemMonth[0]) {
       parseProperties = Object.entries(itemMonth[1])
-      console.log("hhhhhhhhhhhhhhhhhhhh", parseProperties)
     }
 
     if (showingMonthEnPrev == itemMonth[0]) {
       parsePropertiesPrev = Object.entries(itemMonth[1])
-
     }
   })
 
@@ -240,14 +243,9 @@ const calculateDays = () => {
     mainListDaysInMonthPrev.value[toDay.value.jd - 1].isToday = true
   }
 
-
-  console.log("ffffffffffffface", mainListDaysInMonth.value)
-
 };
 
 // =================================
-
-
 
 function getShamsiMonthNumber(gregorianDate) {
   const shamsiDate = toJalaali(
@@ -259,23 +257,18 @@ function getShamsiMonthNumber(gregorianDate) {
   return shamsiDate.jm;
 }
 
-//========================= global functions
-
 const goNextMonth = () => {
-  createshowingMasterDate(1)
+  createshowingDate(1)
 }
 
 const goPrevMonth = () => {
-  createshowingMasterDate(-1)
+  createshowingDate(-1)
 }
 
 const isLeapShowingYear = computed(() => isLeapJalaaliYear(showingMasterDateJalali.value?.jy))
-// =================================
-
 
 onMounted(() => {
-  createshowingMasterDate(0)
-
+  createshowingDate(0)
 })
 </script>
 
