@@ -15,8 +15,7 @@
         <div @click="goNextMonth()"
           class="flex items-center gap-2 my-delay w-[40px] h-[30px] text-[10px] hover:text-emerald-500 hover:text-[12px] cursor-pointer">
 
-          <div class="pt-1">=={{ indexMonthOfYear }}==
-            {{ indexOfNextMonth }}
+          <div class="pt-1">
             {{ shamsiMonths[indexOfNextMonth]?.name }}
           </div>
           <i class='fa-angle-right fa'></i>
@@ -263,9 +262,13 @@ const goPrevMonth = () => {
 const isLeapShowingYear = computed(() => isLeapJalaaliYear(showingMasterDateJalali.value?.jy))
 
 const indexOfNextMonth = computed(() => {
+  console.log('indexMonthOfYear.value:::', indexMonthOfYear.value)
   if ((indexMonthOfYear.value + 1) < 12) {
     return (indexMonthOfYear.value + 1)
-  } else {
+  } else if (indexMonthOfYear.value == 12) {
+    return 1
+  }
+  else {
     return 0
   }
 })
@@ -293,10 +296,8 @@ const indexOfShowMonthPrev = computed(() => {
     return 11
   }
 })
+createshowingDate(0)
 
-onMounted(() => {
-  createshowingDate(0)
-})
 
 </script>
 
